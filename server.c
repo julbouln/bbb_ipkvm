@@ -1,6 +1,6 @@
 #include "ipkvm.h"
 
-// VNC SERVER
+// replace some libvncserver code
 
 static void vnc_send_framebuffer_update(ipkvm_t *ipkvm, rfbClientPtr cl) {
     if (ipkvm->last_buffer_idx < 0)
@@ -142,17 +142,21 @@ static void vnc_key_event(rfbBool down, rfbKeySym keysym, rfbClientPtr cl) {
     input_keyboard_event(ipkvm, down, keysym);
 }
 
+// unused
 void server_resize(ipkvm_t *ipkvm) {
     ipkvm->v_fb = realloc(ipkvm->v_fb, ipkvm->width * ipkvm->width * 4);
     rfbNewFramebuffer(ipkvm->server, ipkvm->v_fb, ipkvm->width, ipkvm->width, 8, 3, 4);
     rfbMarkRectAsModified(ipkvm->server, 0, 0, ipkvm->width, ipkvm->height);
 }
 
+// do not permit resize for now
 static int vnc_set_desktop_size(int width, int height, int numScreens, struct rfbExtDesktopScreen *extDesktopScreens,
                                 struct _rfbClientRec *cl) {
     ipkvm_t *ipkvm = cl->screen->screenData;
     return rfbExtDesktopSize_ResizeProhibited;
 }
+
+// server functions
 
 void server_open(ipkvm_t *ipkvm, char *address) {
 #ifdef AUDIO_EXTENSION

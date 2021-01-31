@@ -163,8 +163,6 @@ void input_keyboard_event(ipkvm_t *ipkvm, rfbBool down, rfbKeySym keysym) {
     keymap_t *k_ptr;
 
     if (ipkvm->keyboard_fd >= 0) {
-        // printf("key %d %x\n", down, keysym);
-
         if (keysym >= 0x61 && keysym <= 0x7a)
             keysym -= 0x20;
 
@@ -244,8 +242,6 @@ int prev_y = -1;
 
 void input_pointer_event(ipkvm_t *ipkvm, int mask, int x, int y) {
     if (ipkvm->pointer_fd >= 0) {
-    //printf("pointer %d %dx%d (%dx%d)\n", mask, x, y, x - prev_x, y - prev_y);
-
         uint16_t m_x = (uint16_t)(x * (SHRT_MAX + 1) / ipkvm->width);
         uint16_t m_y = (uint16_t)(y * (SHRT_MAX + 1) / ipkvm->height);
         unsigned char button = 0;

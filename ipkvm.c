@@ -28,33 +28,7 @@ void ipkvm_init(ipkvm_t *ipkvm, int width, int height, int fps) {
 	ipkvm->audio_enabled = false;
 }
 
-/*
-    struct timeval t0, t1;
-    gettimeofday(&t0, 0);
-    gettimeofday(&t1, 0);
-    long elapsed = (t1.tv_sec-t0.tv_sec)*1000000 + t1.tv_usec-t0.tv_usec;
-    printf("elapsed: %ld\n", elapsed);
-*/
 void *ipkvm_video_run(void *data) {
-	ipkvm_t *ipkvm = (ipkvm_t *) data;
-
-	video_set_size(ipkvm, ipkvm->width, ipkvm->height);
-	video_init_mmap(ipkvm);
-	video_start_capturing(ipkvm);
-
-	while (!s_interrupted) {
-		if (ipkvm->need_capture) {
-			video_capture(ipkvm);
-		} else {
-			// do not capture if there is no client
-			usleep(30000);
-		}
-	}
-
-	video_stop_capturing(ipkvm);
-}
-
-void *ipkvm_capture_run(void *data) {
 	ipkvm_t *ipkvm = (ipkvm_t *) data;
 
 	video_set_size(ipkvm, ipkvm->width, ipkvm->height);
@@ -172,9 +146,9 @@ int main(int argc, char **argv) {
 
 	    gettimeofday(&t1, 0);
 		long elapsed = (t1.tv_sec-t0.tv_sec)*1000000 + t1.tv_usec-t0.tv_usec;
-	    //printf("elapsed: %ld\n", elapsed);
+
+		// dynamic audio buffer size
 	    ipkvm->audio_frames = ALIGN_AUDIO((AUDIO_RATE/1000)*(elapsed/1000) - 100);
-	    //printf("audio_frames: %d\n", ipkvm->audio_frames);
 	    if(ipkvm->audio_frames > AUDIO_BUFFER_FRAMES)
 	    	ipkvm->audio_frames=AUDIO_BUFFER_FRAMES;
 	}

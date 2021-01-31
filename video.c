@@ -82,10 +82,6 @@ void video_stop_capturing(ipkvm_t *ipkvm) {
     }
 }
 
-
-//    struct timeval t0, t1;
-
-
 void video_capture(ipkvm_t *ipkvm) {
     int rc;
     struct v4l2_buffer buf;
@@ -128,24 +124,11 @@ void video_capture(ipkvm_t *ipkvm) {
 
                 // done with frame
                 ipkvm->new_frame = true;
-                if(ipkvm->need_capture) { // in case client was disconnected
-                    // wait sending to client
-//                    pthread_barrier_wait(&ipkvm->barr);
-                }
-
-      //          gettimeofday(&t1, 0);
-    //            long elapsed = (t1.tv_sec-t0.tv_sec)*1000000 + t1.tv_usec-t0.tv_usec;
-  //              t0 = t1;
-//                printf("last video capture %ldus ago idx: %d\n", elapsed, buf.index);
-
- //               ipkvm->new_frame = false;
            } else {
                 fprintf(stderr, "Drop invalid frame idx:%d byteused:%d/%ld flags:%x 0:%x 1:%x\n",
                         buf.index, buf.bytesused, ipkvm->buffers[buf.index].size, buf.flags, data[0], data[1]);
                 ipkvm->buffers[buf.index].payload = 0;
             }
-            
-
         }
 
         for (unsigned int i = 0; i < BUF_COUNT; ++i) {
@@ -167,8 +150,6 @@ void video_capture(ipkvm_t *ipkvm) {
                 }
             }
         }
-    } else {
-       // printf("not ready\n");
     }
 }
 
@@ -265,8 +246,6 @@ void video_init_mmap(ipkvm_t *ipkvm) {
     if (rc < 0 || req.count < 2) {
         fprintf(stderr, "Failed to request streaming buffers : %s\n", strerror(errno));
     }
-
-    // buffers.resize(req.count);
 
     for (i = 0; i < BUF_COUNT; ++i) {
         struct v4l2_buffer buf;

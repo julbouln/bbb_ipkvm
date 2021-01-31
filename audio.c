@@ -92,7 +92,6 @@ static int xrun_recovery(snd_pcm_t *handle, int err)
 }
 
 void audio_capture(ipkvm_t *ipkvm) {
-	if(ipkvm->audio_enabled) {
     int err;
 
 	if ((err = snd_pcm_readi (ipkvm->audio_handle, ipkvm->audio_buffer, ipkvm->audio_frames)) != ipkvm->audio_frames) {
@@ -102,7 +101,6 @@ void audio_capture(ipkvm_t *ipkvm) {
 
 	      return;
     	}
-	}
 }
 
 void audio_close(ipkvm_t *ipkvm) {

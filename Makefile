@@ -19,4 +19,4 @@ ipkvm_vnc_client:
 	gcc client.c -I/usr/include/SDL2 -lSDL2 -lvncclient -o ipkvm_vnc_client
 
 clean:
-	rm -rf *.o *~ ipkvm_vnc_client ipkvm_vnc_client
+	rm -rf *.o *~ ipkvm_vnc_client ipkvm_vnc_server

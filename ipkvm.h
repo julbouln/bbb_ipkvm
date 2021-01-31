@@ -39,6 +39,9 @@
 #define AUDIO_EXTENSION
 #define AUDIO_RATE 96000
 #define AUDIO_CHANNELS 1
+// NOTE: seems fixed in linux 5.4
+//#define AUDIO_RATE 48000
+//#define AUDIO_CHANNELS 2
 #define AUDIO_BUFFER_ALIGN 32
 #define AUDIO_BUFFER_FRAMES 256
 

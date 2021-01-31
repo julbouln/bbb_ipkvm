@@ -64,7 +64,7 @@ int main(int argc, char **argv) {
 	ipkvm = (ipkvm_t *) malloc(sizeof(ipkvm_t));
 
 	int option;
-	const char *opts = "f:k:p:v:x:y:h";
+	const char *opts = "f:k:p:v:a:x:y:h";
 	struct option lopts[] = {{"framerate", required_argument, 0, 'f'},
 		{"keyboard",  required_argument, 0, 'k'},
 		{"mouse",     required_argument, 0, 'p'},
@@ -94,6 +94,7 @@ int main(int argc, char **argv) {
 				break;
 			case 'a':
 				audio_dev = optarg;
+				break;
 			case 'x':
 				width = (int) strtol(optarg, NULL, 0);
 				break;

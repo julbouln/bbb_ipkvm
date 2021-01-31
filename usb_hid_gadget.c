@@ -9,18 +9,18 @@
 #define MANUFACTURER "/sys/kernel/config/usb_gadget/g_multi/strings/0x409/manufacturer"
 #define PRODUCT "/sys/kernel/config/usb_gadget/g_multi/strings/0x409/product"
 #define MAXPOWER "/sys/kernel/config/usb_gadget/g_multi/configs/c.1/MaxPower"
-#define USB0 "/sys/kernel/config/usb_gadget/g_multi/functions/hid.usb0"
-#define USB1 "/sys/kernel/config/usb_gadget/g_multi/functions/hid.usb1"
-#define CONF0 "/sys/kernel/config/usb_gadget/g_multi/configs/c.1/hid.usb0"
-#define CONF1 "/sys/kernel/config/usb_gadget/g_multi/configs/c.1/hid.usb1"
-#define K_PROROCOL "/sys/kernel/config/usb_gadget/g_multi/functions/hid.usb0/protocol"
-#define K_SUBCLASS "/sys/kernel/config/usb_gadget/g_multi/functions/hid.usb0/subclass"
-#define K_REPORTLENGTH "/sys/kernel/config/usb_gadget/g_multi/functions/hid.usb0/report_length"
-#define K_REPORTDESC "/sys/kernel/config/usb_gadget/g_multi/functions/hid.usb0/report_desc"
-#define M_PROROCOL "/sys/kernel/config/usb_gadget/g_multi/functions/hid.usb1/protocol"
-#define M_SUBCLASS "/sys/kernel/config/usb_gadget/g_multi/functions/hid.usb1/subclass"
-#define M_REPORTLENGTH "/sys/kernel/config/usb_gadget/g_multi/functions/hid.usb1/report_length"
-#define M_REPORTDESC "/sys/kernel/config/usb_gadget/g_multi/functions/hid.usb1/report_desc"
+#define USB0 "/sys/kernel/config/usb_gadget/g_multi/functions/hid.0"
+#define USB1 "/sys/kernel/config/usb_gadget/g_multi/functions/hid.1"
+#define CONF0 "/sys/kernel/config/usb_gadget/g_multi/configs/c.1/hid.0"
+#define CONF1 "/sys/kernel/config/usb_gadget/g_multi/configs/c.1/hid.1"
+#define K_PROROCOL "/sys/kernel/config/usb_gadget/g_multi/functions/hid.0/protocol"
+#define K_SUBCLASS "/sys/kernel/config/usb_gadget/g_multi/functions/hid.0/subclass"
+#define K_REPORTLENGTH "/sys/kernel/config/usb_gadget/g_multi/functions/hid.0/report_length"
+#define K_REPORTDESC "/sys/kernel/config/usb_gadget/g_multi/functions/hid.0/report_desc"
+#define M_PROROCOL "/sys/kernel/config/usb_gadget/g_multi/functions/hid.1/protocol"
+#define M_SUBCLASS "/sys/kernel/config/usb_gadget/g_multi/functions/hid.1/subclass"
+#define M_REPORTLENGTH "/sys/kernel/config/usb_gadget/g_multi/functions/hid.1/report_length"
+#define M_REPORTDESC "/sys/kernel/config/usb_gadget/g_multi/functions/hid.1/report_desc"
 #define CONFIGURATION "/sys/kernel/config/usb_gadget/g_multi/configs/c.1/strings/0x409/configuration"
 #define UDC "/sys/kernel/config/usb_gadget/g_multi/UDC"
 
@@ -132,13 +132,13 @@ static struct hid_init_desc _hid_init_desc[] = {
 	DESC(MANUFACTURER, "Beagleboard", 11),
 	DESC(PRODUCT, "BBB virtual input", 17),
 	DESC(MAXPOWER, "0x01", 4),
-	DESC(K_PROROCOL, "0x01", 4),
-	DESC(K_SUBCLASS, "0x01", 4),
-	DESC(K_REPORTLENGTH, "0x40", 4),
+	DESC(K_PROROCOL, "1", 4),
+	DESC(K_SUBCLASS, "1", 1),
+	DESC(K_REPORTLENGTH, "8", 1),
 	DESC(K_REPORTDESC, &hid_report_keyboard, sizeof(hid_report_keyboard)),
-	DESC(M_PROROCOL, "0x02", 4),
-	DESC(M_SUBCLASS, "0x01", 4),
-	DESC(M_REPORTLENGTH, "0x40", 4),
+	DESC(M_PROROCOL, "2", 1),
+	DESC(M_SUBCLASS, "1", 1),
+	DESC(M_REPORTLENGTH, "6", 1),
 	DESC(M_REPORTDESC, &hid_report_mouse, sizeof(hid_report_mouse)),
 	DESC(CONFIGURATION, "Conf 1", 6),
 };
@@ -151,6 +151,7 @@ static int hid_f_write(char *path, const void *ptr, size_t size) {
 		return -1;
 	}
 	fwrite(ptr, size, 1, pFile);
+	
 	fclose(pFile);
 	return 0;
 }
@@ -164,8 +165,7 @@ int usb_hid_gadget_init(void) {
 
 	if (stat("/sys/kernel/config/usb_gadget", &st) >= 0) {
 
-		hid_f_write(UDC, "", strlen(USB_DEV_NAME));
-
+		hid_f_write(UDC, "\n", 1);
 
 		if (stat("/sys/kernel/config/usb_gadget/g_multi", &st) == -1) {
 			mkdir("/sys/kernel/config/usb_gadget/g_multi", 0755);
